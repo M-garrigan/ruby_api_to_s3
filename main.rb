@@ -3,21 +3,34 @@ require "pg"
 require_relative "helpers/config.rb"
 
 
+
 # Entry Point
 def handle_main (event, context)
+  db = config() 
+  puts(db.instance_of?(Hash))
+  puts(db.size)
+  puts(db.key?(:host))
+  begin
   
-  db = config()
+    conn = PG.connect( # DB connection
+      host: db[:host],
+      port: db[:port],
+      user: db[:user],
+      password: db[:password],
+      dbname: db[:dbname]
+    )
 
-  # DB connection
-  conn = PG.connect(
-    host: db[:host],
-    port: db[:port],
-    user: db[:user],
-    password: db[:password],
-    dbname: db[:dbname]
-  )
-  
-  conn.close()
+
+  rescue PG::Error => e
+    puts(e.message)
+
+  ensure 
+    if conn
+      conn.close()
+    end
+
+  end
+
 end
 
 handle_main('e', 'c')
