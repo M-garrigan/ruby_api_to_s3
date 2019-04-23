@@ -1,10 +1,11 @@
-#!/usr/local/opt/ruby/bin/ruby
+# /main.rb
+
 require "pg"
 require_relative "bin/helpers/config.rb"
 require_relative "bin/controllers/generateNewCustomTime.rb"
 require_relative "bin/controllers/handleNewCustomTime.rb"
 require_relative "bin/controllers/topGames.rb"
-
+require_relative "bin/controllers/topStreams.rb"
 
 # Entry Point
 def handle_main (event, context)
@@ -30,7 +31,7 @@ def handle_main (event, context)
       handleTopGames(conn, time)
 
       # Get top streamers from twitch api and insert into db
-      # retrieveTopStreamers(conn, time)
+      handleTopStreamers(conn, time)
     end
 
   rescue PG::Error => e
