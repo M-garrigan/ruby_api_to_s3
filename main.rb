@@ -31,7 +31,7 @@ def handle_main (event, context)
       handleTopGames(conn, time)
 
       # Get top streamers from twitch api and insert into db
-      handleTopStreamers(conn, time)
+      handleTopStreams(conn, time)
     end
 
   rescue PG::Error => e
