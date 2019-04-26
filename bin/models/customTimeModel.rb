@@ -10,11 +10,13 @@ def retrieveOldCustomTime(conn, query)
   string.gsub!("}", "") # mutates string
   arr = string.split(",")
 
+  intArray = [] 
+
   arr.each do |x|
-    x.to_i
+    intArray.push(x.to_i)
   end
 
-  return arr
+  return intArray
 end
 
 
