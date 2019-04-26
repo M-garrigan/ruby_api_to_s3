@@ -21,7 +21,7 @@ def assembleQueryForTopGames(conn, games)
   return {query: query, items: items}
 end
 
-def handleTopGames(conn, games, time)
+def insertTopGames(conn, games, time)
   result = assembleQueryForTopGames(conn, games)
   items = result[:items]
   conn.exec(
