@@ -4,10 +4,20 @@ require "date"
 require_relative "../helpers/roundTimeDown.rb"
 require_relative "../models/customTimeModel.rb"
 
+# -------------------------------------------------------------------
+# newCustomTime 
+# 
+# @param conn {PG::Connection} -- the postgres connection
+#
+# @return {nil or array} -- we want to ensure the cron job is not
+#                        -- running too quickly and if it is we will
+#                        -- return nill and not make the api calls.
+# -------------------------------------------------------------------
+
 def newCustomTime(conn)
+  
   time_now = DateTime.now
 
-  # round down current time
   time_now_rounded = roundTimeDown(time_now)
   
   # query db for last time recorded

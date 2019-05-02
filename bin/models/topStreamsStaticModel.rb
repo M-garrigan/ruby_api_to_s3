@@ -1,6 +1,14 @@
 # bin/models/topStreamsStaticModel.rb
 
-# 1) query db for specific stream id
+# -------------------------------------------------------------------------------
+# selectStreamIfAvailable
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param query {String} -- query for db table 'top_games_static'
+#
+# @return {nil or Array} -- array (4 strings)
+# -------------------------------------------------------------------------------
+
 def selectStreamIfAvailable(conn, query)
   result = conn.exec(query)
   result_arr = result.values
@@ -12,7 +20,16 @@ def selectStreamIfAvailable(conn, query)
   end
 end
 
-# 2) insert new stream into top_streams_static table
+# -------------------------------------------------------------------------------
+# insertStreamIntoStaticTable
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param query_static {String} -- query for db table 'top_streams_static'
+# @param stream {nil or Array} -- array (4 strings)
+#
+# @return {none} -- no explicit return 
+# -------------------------------------------------------------------------------
+
 def insertStreamIntoStaticTable(conn, query_static, stream)
   conn.exec(
     query_static,

@@ -6,6 +6,16 @@ require_relative "../helpers/config.rb"
 require_relative "../models/topStreamsStaticModel.rb"
 require_relative "../models/topStreamsModel.rb"
 
+# -------------------------------------------------------------------------------
+# callTwitchApiForTopStreams
+#
+# @about -- uses Twitch API v5 Kraken, currently there is also the newer Helix
+#        -- API but it does not contain all the information that I need.
+# 
+# @return {Array or nil} -- if the call is sucessfull we will have an array of 
+#                        -- hash data for each stream. 
+# -------------------------------------------------------------------------------
+
 def callTwitchApiForTopStreams()
   twitch_id = twitch()
   
@@ -25,6 +35,17 @@ def callTwitchApiForTopStreams()
   end
 end
 
+# -------------------------------------------------------------------------------
+# handleTopStreams
+# 
+# @about -- top_streams_static table is used to store meta info for each stream
+#        -- so we want to store that info only once. 
+#
+# @param conn {PG::Connection} -- the postgres connection
+# @param time {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+#
+# @return {none} -- no explicit return 
+# -------------------------------------------------------------------------------
       
 def handleTopStreams(conn, time)
   streams = callTwitchApiForTopStreams() # returns array of 20 streams or nil

@@ -2,6 +2,15 @@
 
 require "pg"
 
+# -------------------------------------------------------------------------------
+# assembleQueryForTopStreams
+#
+# @param conn {PG::Connection} -- the postgres connection
+# @param streams {Array} -- array of hashes
+#
+# @return {Hash} -- signature: {query: String, items: Array of Strings} 
+# -------------------------------------------------------------------------------
+
 def assembleQueryForTopStreams(conn, streams) 
 
   # array order: [channel_id, display_name, language, game, created_at, followers, views, viewers, preview_template]
@@ -25,9 +34,17 @@ def assembleQueryForTopStreams(conn, streams)
   return {query: query, items: items}
 end
 
+# -------------------------------------------------------------------------------
+# insertTopStreams
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param streams {Array} -- array of hashes
+# @param time {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+#
+# @return {none} -- no explicit return 
+# -------------------------------------------------------------------------------
+
 def insertTopStreams(conn, streams, time)
-  # puts('topStreamsModel', streams.class)
-  # puts('topStreamsModel', streams)
   result = assembleQueryForTopStreams(conn, streams)
   items = result[:items]
   conn.exec(

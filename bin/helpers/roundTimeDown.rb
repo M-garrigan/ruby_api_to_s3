@@ -2,6 +2,14 @@
 
 require "date"
 
+# -------------------------------------------------------------------------------
+# roundTimeDown
+#
+# @param time {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+#
+# @return {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+# -------------------------------------------------------------------------------
+
 def roundTimeDown(time)
   
   # round minuite down to nearest 5 min increment

@@ -2,6 +2,15 @@
 
 require "pg"
 
+# -------------------------------------------------------------------------------
+# retrieveOldCustomTime 
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param query {String} -- query for db table 'last_custom_time_stamp'
+#
+# @return {Array} -- array (5 ints) signature: [yr, mo, day, hr, min]
+# -------------------------------------------------------------------------------
+
 def retrieveOldCustomTime(conn, query)
   result = conn.exec(query)
 
@@ -15,10 +24,19 @@ def retrieveOldCustomTime(conn, query)
   arr.each do |x|
     intArray.push(x.to_i)
   end
-
+  
   return intArray
 end
 
+# -------------------------------------------------------------------------------
+# insertNewCustomTime
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param query {String} -- query for db table 'last_custom_time_stamp'
+# @param time {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+#
+# @return {none} -- no explicit return 
+# -------------------------------------------------------------------------------
 
 def insertNewCustomTime(conn, query, time)
   conn.exec(

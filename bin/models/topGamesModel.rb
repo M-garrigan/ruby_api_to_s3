@@ -2,6 +2,15 @@
 
 require "pg"
 
+# -------------------------------------------------------------------------------
+# assembleQueryForTopGames
+#
+# @param conn {PG::Connection} -- the postgres connection
+# @param games {Array} -- array of hashes
+#
+# @return {Hash} -- signature: {query: String, items: Array of Strings} 
+# -------------------------------------------------------------------------------
+
 def assembleQueryForTopGames(conn, games) 
 
   # array order: [_id, name, channels, viewers, popularity]
@@ -20,6 +29,16 @@ def assembleQueryForTopGames(conn, games)
 
   return {query: query, items: items}
 end
+
+# -------------------------------------------------------------------------------
+# insertTopGames
+# 
+# @param conn {PG::Connection} -- the postgres connection
+# @param games {Array} -- array of hashes
+# @param time {Array} -- array of 5 ints,  signature: [yr, mo, day, hr, min]
+#
+# @return {none} -- no explicit return 
+# -------------------------------------------------------------------------------
 
 def insertTopGames(conn, games, time)
   result = assembleQueryForTopGames(conn, games)
