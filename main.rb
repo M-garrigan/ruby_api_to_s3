@@ -47,4 +47,4 @@ def handle_main (event, context)
 
 end
 
-handle_main('e', 'c')
+# handle_main('e', 'c')
