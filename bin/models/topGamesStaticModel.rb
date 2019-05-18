@@ -12,8 +12,6 @@
 def selectGameIfAvailable(conn, query)
   result = conn.exec(query)
   result_arr = result.values
-  puts('sel ', result_arr[0])
-  puts('sel ', result_arr[0].class)
   
   if (result_arr[0].class == 'NilClass')
     return nil
