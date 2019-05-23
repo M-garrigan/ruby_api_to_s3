@@ -1,50 +1,55 @@
 # /main.rb
 
-require "pg"
+require "aws-sdk-s3"
+require "json"
+require "time"
 require_relative "bin/helpers/config.rb"
-require_relative "bin/controllers/generateNewCustomTime.rb"
-require_relative "bin/controllers/handleNewCustomTime.rb"
+require_relative "bin/controllers/formatTime.rb"
 require_relative "bin/controllers/topGames.rb"
 require_relative "bin/controllers/topStreams.rb"
 
+
 # Entry Point
 def handle_main (event, context)
-  db = config() 
+  s3Config = awsS3()
   
   begin
-  
-    conn = PG.connect( # DB connection
-      host: db[:host],
-      port: db[:port],
-      user: db[:user],
-      password: db[:password],
-      dbname: db[:dbname]
+    s3 = Aws::S3::Client.new(
+      region:'us-east-2',
+      access_key_id: s3Config[:accessKeyID],
+      secret_access_key: s3Config[:secretAccessKey]
     )
-
-    time = newCustomTime(conn)
     
-    if(time)
-      # insert time into db
-      handleNewCustomTime(conn, time)
+    # generate timestamp, fetch top games & fetch top streams
+    time = formatTime()
+    games = callTwitchApiForTopGames()
+    streams = callTwitchApiForTopStreams()
 
-      # Get top games from twitch api and insert into db
-      handleTopGames(conn, time)
+    # combine all the data into a hash
+    data = {
+      time: time,
+      games: games,
+      streams: streams
+    }
+    # file name will be epoch (in ms) as a string
+    # example "58539349.json"
+    epoch = data[:time][:epoch]
+    fileName = "#{epoch.to_s}.json"
 
-      # Get top streamers from twitch api and insert into db
-      handleTopStreams(conn, time)
-    end
+    file = File.new(fileName, "w")
+    file.puts(JSON.generate(data))
+    file.close
+    
+    res = s3.put_object({
+      bucket: "watch-me-api-to-s3",
+      key: "api/#{fileName}",
+      body: JSON.generate(data),
+    })
 
-  rescue PG::Error => e
-    puts(e.message)
-
-  ensure 
-    if conn
-      conn.close()
-      puts('DB connection closed.')
-    end
-
+    puts('res: ', res)
+  rescue Aws::S3::Errors::ServiceError => err
+    puts('S3:Error: ', err)
   end
-
 end
 
-# handle_main('e', 'c')
+handle_main('e', 'c')
