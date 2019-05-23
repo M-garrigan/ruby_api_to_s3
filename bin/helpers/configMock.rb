@@ -1,16 +1,12 @@
 # bin/helpers/config.rb
 
-def config
-  db = {
-    host: "http_to_db",
-    port: 5432,
-    user: "your_username",
-    password: "your_password",
-    dbname: "your_db_name"
+def awsS3 
+  s3 = {
+    accessKeyID: "access_key_id",
+    secretAccessKey: "secret_access_key"
   }
-  return db
+  return s3
 end
-
 def twitch
   twitch = {
     "Client-ID": "your_api_key"
