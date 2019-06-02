@@ -1,0 +1,31 @@
+# bin/controllers/topGames.rb
+
+require "httparty"
+require "json"
+require_relative "./helpers/config.rb"
+
+# -------------------------------------------------------------------------------
+# callTwitchApiForTopGames
+#
+# @about -- uses Twitch API v5 Kraken, currently there is also the newer Helix
+#        -- API but it does not contain all the information that I need.
+# 
+# @return {Array} -- if the call is sucessfull we will have an array of 
+#                        -- hash data for each game or an empty array 
+# -------------------------------------------------------------------------------
+
+def callTwitchApiForTopGames()
+  twitch_id = twitch()
+  
+  res = HTTParty.get(
+    "https://api.twitch.tv/kraken/games/top", 
+    { 
+      headers: { "Client-ID": twitch_id[:"Client-ID"] },
+      query: { "limit": 21 }
+   }
+  )
+  res_parsed = JSON.parse(res.body)
+  
+  return res_parsed['top']
+  
+end
