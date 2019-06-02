@@ -1,87 +1,77 @@
-# cron_microservice_ruby
+# Watch Me Twitch
 
-A simple service that gathers data about popular games and top streamers from the Twitch API. The service is executed every 5 minutes and after parsing the retrieved data we insert it into a PostgreSQL database.
+This is a piece of an application that makes up Watch Me Twitch .com
 
-## Run Tests
+## What this lambda does.
+Aggregates data from the Twitch API about current top games being played and top streamers on the platform. The data then gets JSON formatted and zipped into a file to be sent to a S3 bucket for storage. 
 
-$ bundle exec rspec
+## Architecture
+Image goes here.
+
+## Twitch API data
+This lambda is hitting the Twitch API for two seperate resources. One is for the top games being played on the platform via https://api.twitch.tv/kraken/games/top. The second is for the top streamers on the platform via https://api.twitch.tv/kraken/streams.
 
 ## Gems Used
-
-pg -- Our C lib wrapper for working with PostgreSQl database
-
+aws-sdk-s3
 httparty -- tool to make http calls
-
+rubyzip 
 rspec - BDD Testing Library
 
-## Postgres DB Schema
+<!-- example of a link -- [Git](https://git-scm.com) -->
 
-#### last_custom_time_stamp
+## How To Use
 
-- time_custom integer[] NOT NULL
-- id integer NOT NULL PK
+As this is a Ruby based lambda you should have Ruby, Bundler, Git and Gem installed for you machine.
 
-#### top_games
+These instructions will set up for local development
 
-- id integer NOT NULL PK
-- game_01 text[] NOT NULL
-- game_02 text[] NOT NULL
-- game_03 text[] NOT NULL
-- game_04 text[] NOT NULL
-- game_05 text[] NOT NULL
-- game_06 text[] NOT NULL
-- game_07 text[] NOT NULL
-- game_08 text[] NOT NULL
-- game_09 text[] NOT NULL
-- game_10 text[] NOT NULL
-- game_11 text[] NOT NULL
-- game_12 text[] NOT NULL
-- game_13 text[] NOT NULL
-- game_14 text[] NOT NULL
-- game_15 text[] NOT NULL
-- game_16 text[] NOT NULL
-- game_17 text[] NOT NULL
-- game_18 text[] NOT NULL
-- game_19 text[] NOT NULL
-- game_20 text[] NOT NULL
+```bash
+# Clone this repository
+$ git clone https://github.com/M-garrigan/ruby_api_to_s3.git
 
-#### top_streams
+# Go into the repository
+$ cd ruby_api_to_s3
 
-- id integer NOT NULL PK
-- stream_01 text[] NOT NULL
-- stream_02 text[] NOT NULL
-- stream_03 text[] NOT NULL
-- stream_04 text[] NOT NULL
-- stream_05 text[] NOT NULL
-- stream_06 text[] NOT NULL
-- stream_07 text[] NOT NULL
-- stream_08 text[] NOT NULL
-- stream_09 text[] NOT NULL
-- stream_10 text[] NOT NULL
-- stream_11 text[] NOT NULL
-- stream_12 text[] NOT NULL
-- stream_13 text[] NOT NULL
-- stream_14 text[] NOT NULL
-- stream_15 text[] NOT NULL
-- stream_16 text[] NOT NULL
-- stream_17 text[] NOT NULL
-- stream_18 text[] NOT NULL
-- stream_19 text[] NOT NULL
-- stream_20 text[] NOT NULL
+# Install dependencies
+$ bundle install
 
-#### top_games_static
+# Run the app
+$ ruby main.rb
+```
 
-- game_id integer NOT NULL PK
-- name text NOT NULL
-- box_art_url text NOT NULL
-- logo_template text NOT NULL
+These instructions will set up for AWS lambda upload
 
-#### top_streams_static
+```bash
+# Clone this repository
+$ git clone https://github.com/M-garrigan/ruby_api_to_s3.git
 
-- user_id integer NOT NULL PK
-- user_name text NOT NULL
-- name text NOT NULL
-- language text NOT NULL
-- created_at text NOT NULL
-- logo text NOT NULL
-- url text NOT NULL
+# Go into the repository
+$ cd ruby_api_to_s3
+
+# Install dependencies locally
+$ bundle install --path="vendor/bundle"
+
+# zip the app
+$ zip -r9 app.zip .
+
+# now upload the app.zip through the gui or cli
+```
+
+
+## S3 Bucket Schema
+Although S3 storage is a flat file storage system we are mocking out a nested directory structure for our storage.
+The directory structure looks like this: 
+2019/
+  6/
+    1/
+      metadata.zip
+      01_05.zip
+      01_10.zip
+      01_15.zip
+      01_20.zip
+
+## Metadata.zip file anatomy
+
+## Resources & Links
+https://github.com/rubyzip/rubyzip
+https://docs.aws.amazon.com/sdk-for-ruby/v3/api/
